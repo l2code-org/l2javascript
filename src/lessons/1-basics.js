@@ -77,6 +77,3 @@ console.log(`myConstVar: ${myConstVar}`) // 8
 // they also can't be re-bound to another value
 // the following would produce an error:
 // myConstVar = 2
-
-// NOTE: this does not mean that you cannot mutate the value
-// TODO: move further up
