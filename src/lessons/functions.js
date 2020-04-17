@@ -95,4 +95,92 @@ function sideEffects (input) {
   return input
 }
 
-sideEffects() // j
+sideEffects(10) // j
+
+// you can see that the function does something that affects the scope outside it's block.
+// after all, it printed something out! Some other examples of side effects are:
+// * communicating with other apps/programs
+// * creating / altering files
+// * mutating (changing) the value of an argument (see chapter on mutation)
+
+// A function can also be bound to a variable
+// in other words, we can have a variable that references a function
+
+function myFunction () {
+  console.log('k')
+}
+
+const referenceToMyFunction = myFunction
+
+referenceToMyFunction() // k
+
+// Given this property of functions in javascript, you can probably see how the following
+// is possible:
+
+const anotherReference = function anotherFunction () {
+  console.log('l')
+}
+
+anotherReference() // l
+
+// Since functions can be passed around in this manner, it can sometimes be redundant to
+// explicitly give them a name. As such, the following is also valid in javascript:
+
+const anonymousFunction = function () {
+  console.log('m')
+}
+
+anonymousFunction() // m
+
+// These are called "anonymous functions". They are anonymous because they don't have names
+
+// Together these concepts used to make up a very important design pattern in javascript.
+// The callback. People would pass a function into another function, with the understanding
+// the second function would call it when it's done
+// Let's take a look at an example:
+
+setTimeout(function () {
+  console.log('I am running after 1000 milliseconds!')
+}, 1000)
+
+// setTimeout is a Javascript API (Application Programming Interface)
+// You pass a function into it, with the understanding that after 1000ms
+// have elapsed, it will run the function a single time for you.
+// Let's look at another example:
+
+function chargeCreditCard (creditCardNumber, _amount) {
+  // ... charge the persons account ...
+  console.log(`charging credit card: ${creditCardNumber}`)
+}
+
+function checkSufficientFunds (creditCardNumber, amount, cb) {
+  // ... check with bank for sufficient funds (use your imagination) ...
+  cb(creditCardNumber, amount)
+}
+
+checkSufficientFunds('5555-5555-5555-5555', 42.67, chargeCreditCard) // charging credit card: ...
+
+// so what's happening here? We have this function `checkSufficientFunds` that will
+// (pretend to) make a request to the bank to see if the credit card has enough
+// money to make the payment for $42.67. If they have sufficient funds, it will call
+// the function that we pass into it, in this case `chargeCreditCard`, for the amount of
+// 42.67! Don't be afraid to pause here to make sense of what's happening!
+
+// Note: What would happen if there was a bug in `checkSufficientFunds` that caused it to
+// call the callback function twice? Well the callback function in this case is `chargeCreditCard`!
+// We would end up charging the credit card twice by accident! This is a very real problem, and
+// one of the reasons that people don't use callbacks as much as they used to. When we pass a
+// callback into another function, we are giving THAT function control over when, and how our
+// callback will be called. Later on we will explore a pattern that allows us to take back control
+// in these situations.
+
+// finally, let's briefly go over another syntax you may see for anonymous functions in javascript
+
+const myArrowFunction = () => {
+  console.log('n')
+}
+
+myArrowFunction() // n
+
+// Please be aware this does not have the exact same behaviour as the "function" syntax we have
+// been using up until this point, but we need to learn more before we can go into the differences.
